@@ -1,28 +1,28 @@
 """Build the Japanese data.
 
-    python3 words-src/build/build_ja.py ja        # the Japanese study list
-    python3 words-src/build/build_ja.py en        # Japanese explanations for en (or fr, es, de)
+    python3 build/build_ja.py ja        # the Japanese study list
+    python3 build/build_ja.py en        # Japanese explanations for en (or fr, es, de)
 
-Japanese study list: reads words-src/build/ja/ja-words-*.txt, in frequency order:
+Japanese study list: reads build/ja/ja-words-*.txt, in frequency order:
 
     word|reading|part of speech|English|French|Spanish|German|Japanese definition
 
 The reading is in kana; it is left out of words.json when the word itself is all kana.
-Writes static/words/data/ja/words.json and defs.{en,fr,es,de,ja}.json.
+Writes data/ja/words.json and defs.{en,fr,es,de,ja}.json.
 
 Japanese explanations for another study language: reads
-words-src/build/<study>/<study>-ja-*.txt, one line per word, in the same order as
-static/words/data/<study>/words.json:
+build/<study>/<study>-ja-*.txt, one line per word, in the same order as
+data/<study>/words.json:
 
     word|Japanese explanation
 
-and writes static/words/data/<study>/defs.ja.json.
+and writes data/<study>/defs.ja.json.
 """
 import glob, json, os, re, sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 study = sys.argv[1] if len(sys.argv) > 1 else sys.exit('usage: build_ja.py <study>')
-DATA = os.path.join(HERE, '..', '..', 'static', 'words', 'data', study)
+DATA = os.path.join(HERE, '..', 'data', study)
 POS = {'noun', 'verb', 'adj', 'adjna', 'adv', 'pron', 'conj', 'det', 'intj', 'num'}
 KANA = re.compile(r'^[ぁ-ゟ゠-ヿー・]+$')
 

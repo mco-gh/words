@@ -18,16 +18,15 @@ progress in the browser's localStorage.
 
 ## Where it lives
 
-The app is part of the mco.dev Hugo site and is published at https://mco.dev/words/.
-
-- `static/words/` is the app itself. Hugo copies `static/` to the site unchanged,
-  so everything in that folder is public.
-- `words-src/` (this folder) holds what should not be published: this README,
-  the data-generation sources in `build/`, and a local preview config in `.claude/`.
+The app is published at https://mco.dev/words/. This repo is mounted in
+[mco-gh/mco.dev](https://github.com/mco-gh/mco.dev) (a Hugo site) as a git submodule
+at `static/words`. Hugo copies `static/` to the site unchanged, so **everything in
+this repo is public** at `https://mco.dev/words/...`, including this README and the
+data-generation sources in `build/`.
 
 ## Run it locally
 
-Serve the site's `static/` folder so URLs match production:
+From a checkout of mco.dev, serve the site's `static/` folder so URLs match production:
 
     python3 -m http.server 4174 --directory static
 
@@ -37,12 +36,19 @@ work, because browsers block module scripts and service workers on `file://`.
 
 ## Publish
 
-Commit and push to `master`; Netlify runs `hugo` and publishes `public/`.
-Before each release, bump `VERSION` in `static/words/sw.js` (see Updating).
+Before each release, bump `VERSION` in `sw.js` (see Updating). Commit and push
+here (`main`), then update the submodule pointer in mco.dev:
+
+    cd mco.dev
+    git submodule update --remote static/words
+    git commit -am "Update words"
+    git push
+
+Netlify then runs `hugo` and publishes the site.
 
 ## Layout
 
-    static/words/                 the published app (https://mco.dev/words/)
+    (repo root)                   the published app (https://mco.dev/words/)
       index.html, styles.css      markup and styles
       app.js                      UI, session queue, settings, routing
       srs.js                      spaced-repetition scheduler (pure functions)
@@ -51,16 +57,16 @@ Before each release, bump `VERSION` in `static/words/sw.js` (see Updating).
       sw.js, manifest.webmanifest PWA: offline cache and install metadata
       data/<study>/words.json     [word, IPA, part of speech] in frequency order
       data/<study>/defs.<lang>.json  one explanation per word, same order
-    words-src/build/              English sources (NGSL parse script, French glosses)
+    build/                        English sources (NGSL parse script, French glosses)
                                   and build.py, which builds the fr / es / de data
-    words-src/build/<lang>/       <lang>-words-*.txt sources for fr, es, de
-    words-src/build/icons/        full-bleed icon source + render.sh
+    build/<lang>/                 <lang>-words-*.txt sources for fr, es, de
+    build/icons/                  full-bleed icon source + render.sh
 
-The app icon is `static/words/icons/icon.svg`; the header logo is a small inline copy
+The app icon is `icons/icon.svg`; the header logo is a small inline copy
 in `index.html`. After changing either SVG, regenerate the PNG icons with headless
 Chrome (ImageMagick's built-in SVG renderer drops the gradient and the letter):
 
-    bash words-src/build/icons/render.sh
+    bash build/icons/render.sh
 
 ## Spaced repetition
 
@@ -102,7 +108,7 @@ Source: Éduscol's "Liste de fréquence lexicale" (about 1,500 of the most frequ
 words, compiled by Étienne Brunet), spreadsheet from
 https://eduscol.education.gouv.fr/6873/liste-de-frequence-lexicale
 
-How it was turned into cards (`words-src/build/fr/fr-words-*.txt`, one line per card:
+How it was turned into cards (`build/fr/fr-words-*.txt`, one line per card:
 `word|IPA|part of speech|English meaning|French definition`, most frequent first):
 
 - Words listed several times with different roles (e.g. "le" as article and as pronoun)
@@ -173,53 +179,53 @@ keep the app free and non-commercial and keep the credit in the About dialog.
 
 ## Rebuilding the word data
 
-Each `words-src/build/<lang>/<lang>-words-*.txt` line is
+Each `build/<lang>/<lang>-words-*.txt` line is
 `word|IPA|part of speech|English meaning|French meaning`, most frequent first.
 After editing, rebuild that language's JSON:
 
-    python3 words-src/build/build.py fr      # or es, de
+    python3 build/build.py fr      # or es, de
 
 The script refuses to write anything if a line has the wrong number of fields, a
 duplicate word, an unknown part of speech or a non-IPA character in the pronunciation.
 
-The Spanish and German explanations live in `words-src/build/<study>/<study>-esde-*.txt`
+The Spanish and German explanations live in `build/<study>/<study>-esde-*.txt`
 (`word|Spanish|German`, one line per word, in exactly the order of that study language's
 `words.json`). Rebuild them with:
 
-    python3 words-src/build/build_esde.py en   # or fr, es, de
+    python3 build/build_esde.py en   # or fr, es, de
 
 It writes `defs.es.json` and `defs.de.json` and refuses to write anything if a word is
 missing, extra or out of order.
 
 Japanese has its own builder. The Japanese study list is in
-`words-src/build/ja/ja-words-*.txt`
+`build/ja/ja-words-*.txt`
 (`word|reading|part of speech|English|French|Spanish|German|Japanese definition`), and
 the Japanese explanations for the other study languages are in
-`words-src/build/<study>/<study>-ja-*.txt` (`word|Japanese`, in `words.json` order):
+`build/<study>/<study>-ja-*.txt` (`word|Japanese`, in `words.json` order):
 
-    python3 words-src/build/build_ja.py ja     # the Japanese study list
-    python3 words-src/build/build_ja.py en     # defs.ja.json for en (or fr, es, de)
+    python3 build/build_ja.py ja     # the Japanese study list
+    python3 build/build_ja.py en     # defs.ja.json for en (or fr, es, de)
 
 ## Add an explanation language
 
-1. For each study language, create `static/words/data/<study>/defs.<code>.json`: a JSON
+1. For each study language, create `data/<study>/defs.<code>.json`: a JSON
    array with one string per word, in the same order as that folder's `words.json`.
-2. Add an entry to `LANGS` in `static/words/i18n.js` (name, part-of-speech labels,
+2. Add an entry to `LANGS` in `i18n.js` (name, part-of-speech labels,
    interval units, About text, UI strings; missing UI strings fall back to English).
-3. Add the new files to `ASSETS` in `static/words/sw.js` and bump `VERSION` there.
+3. Add the new files to `ASSETS` in `sw.js` and bump `VERSION` there.
 
 ## Add a study language
 
-1. Create `static/words/data/<code>/words.json` (`[word, "/IPA/", part of speech]` in
+1. Create `data/<code>/words.json` (`[word, "/IPA/", part of speech]` in
    frequency order) and a `defs.<lang>.json` there for every explanation language.
-2. Add an entry to `STUDY` in `static/words/i18n.js` (name, speech-synthesis voice), and
+2. Add an entry to `STUDY` in `i18n.js` (name, speech-synthesis voice), and
    a `study.<code>` string (the language's name) for each explanation language.
-3. Add the files to `ASSETS` in `static/words/sw.js` and bump `VERSION`.
+3. Add the files to `ASSETS` in `sw.js` and bump `VERSION`.
 
 ## Updating
 
 The service worker serves cached files first and refreshes them in the background,
-so bump `VERSION` in `static/words/sw.js` on every release; users get the new version on their
+so bump `VERSION` in `sw.js` on every release; users get the new version on their
 next visit.
 
 ## Credits

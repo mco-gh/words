@@ -1,9 +1,9 @@
-"""Build static/words/data/<lang>/*.json from words-src/build/<lang>/<lang>-words-*.txt.
+"""Build data/<lang>/*.json from build/<lang>/<lang>-words-*.txt.
 
 Each line: word|IPA|part of speech|English meaning|French meaning
 Lines are in frequency order (most frequent first).
 
-    python3 words-src/build/build.py fr      # or es, de
+    python3 build/build.py fr      # or es, de
 """
 import glob, json, os, sys
 
@@ -14,7 +14,7 @@ IPA = set('abcdefhijklmnoprstuvwxyzæçðøŋœɐɑɔəɛɡɣɪɲɾʁʃʊʋʎʏ�
 HERE = os.path.dirname(os.path.abspath(__file__))
 lang = sys.argv[1] if len(sys.argv) > 1 else sys.exit('usage: build.py <lang>')
 SRC = os.path.join(HERE, lang)
-OUT = os.path.join(HERE, '..', '..', 'static', 'words', 'data', lang)
+OUT = os.path.join(HERE, '..', 'data', lang)
 
 rows, seen, bad = [], set(), 0
 for path in sorted(glob.glob(os.path.join(SRC, f'{lang}-words-*.txt'))):

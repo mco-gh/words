@@ -1,13 +1,13 @@
 #!/bin/bash
 # Render the PNG app icons from the SVG sources with headless Chrome, which draws
 # SVG gradients and paths correctly (ImageMagick's built-in SVG renderer does not).
-# Run from the repo root:  bash words-src/build/icons/render.sh
+# Run from the repo root:  bash build/icons/render.sh
 set -euo pipefail
 
 CHROME="${CHROME:-/Applications/Google Chrome Beta.app/Contents/MacOS/Google Chrome Beta}"
 [ -x "$CHROME" ] || CHROME="/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
-OUT=static/words/icons
-FULL=words-src/build/icons/full-bleed.svg
+OUT=icons
+FULL=build/icons/full-bleed.svg
 TMP=$(mktemp -d)
 
 render() { # svg size output

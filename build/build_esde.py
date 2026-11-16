@@ -1,21 +1,21 @@
 """Build the Spanish and German explanations for one study language.
 
-Reads words-src/build/<study>/<study>-esde-*.txt, one line per word, in the same
-order as static/words/data/<study>/words.json:
+Reads build/<study>/<study>-esde-*.txt, one line per word, in the same
+order as data/<study>/words.json:
 
     word|Spanish explanation|German explanation
 
-and writes static/words/data/<study>/defs.es.json and defs.de.json.
+and writes data/<study>/defs.es.json and defs.de.json.
 When the study language is Spanish (or German), that column is a short definition
 in the same language rather than a translation.
 
-    python3 words-src/build/build_esde.py en      # or fr, es, de
+    python3 build/build_esde.py en      # or fr, es, de
 """
 import glob, json, os, sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 study = sys.argv[1] if len(sys.argv) > 1 else sys.exit('usage: build_esde.py <study>')
-DATA = os.path.join(HERE, '..', '..', 'static', 'words', 'data', study)
+DATA = os.path.join(HERE, '..', 'data', study)
 words = [w[0] for w in json.load(open(os.path.join(DATA, 'words.json'), encoding='utf-8'))]
 
 rows, bad = [], 0
