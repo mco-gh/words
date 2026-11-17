@@ -28,10 +28,14 @@ async function init() {
   setStudy(settings.study);
   applyStrings();
   wireEvents();
+  let unavailable = null;  // the saved study language, if it could not be loaded
   try {
     [words, defs] = await loadData(getStudy(), getLang()).catch((err) => {
       if (getStudy() === 'en') throw err;
-      setStudy('en'); // the saved study language is unavailable: fall back
+      // Fall back to English for this visit only. The saved setting is left alone, so the
+      // next visit tries the saved language again, and its progress is never touched.
+      unavailable = getStudy();
+      setStudy('en');
       return loadData('en', getLang());
     });
   } catch (err) {
@@ -45,6 +49,8 @@ async function init() {
   fillSettingsForm();
   startSession();
   route();
+  // Say why the words are in English, so it doesn't look as if progress was lost.
+  if (unavailable) toast(t('msg.studyFallback', { language: t(`study.${unavailable}`) }), 10000);
   registerServiceWorker();
 }
 
@@ -562,12 +568,12 @@ async function importBackup(file) {
 }
 
 let toastTimer;
-function toast(message) {
+function toast(message, ms = 2600) {
   const node = $('toast');
   node.textContent = message;
   node.classList.add('show');
   clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => node.classList.remove('show'), 2600);
+  toastTimer = setTimeout(() => node.classList.remove('show'), ms);
 }
 
 // ───────── Events ─────────

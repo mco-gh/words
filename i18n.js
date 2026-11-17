@@ -66,6 +66,7 @@ export const LANGS = {
       'set.title': 'Settings', 'set.study': 'Study language', 'set.studyHelp': 'The language you are learning. The word on the front of each card is in this language. Each study language keeps its own progress.',
       'set.lang': 'Explanation language', 'set.langHelp': 'The meaning on the back of each card, and the app’s menus and messages, are in this language.',
       'msg.studyError': 'Could not load that language. Check your connection and try again.',
+      'msg.studyFallback': 'Could not load the {language} words, so you’re seeing English for now. Your {language} progress is still saved: reload when you’re back online.',
       'set.theme': 'Appearance', 'set.system': 'System', 'set.light': 'Light', 'set.dark': 'Dark',
       'set.systemNow': 'System (currently {scheme})', 'set.lightLc': 'light', 'set.darkLc': 'dark',
       'set.srs': 'Spaced repetition', 'set.newPerDay': 'New words per day', 'set.maxReviews': 'Maximum reviews per day',
@@ -134,6 +135,7 @@ export const LANGS = {
       'set.title': 'Réglages', 'set.study': 'Langue étudiée', 'set.studyHelp': 'La langue que vous apprenez. Le mot au recto de chaque carte est dans cette langue. Chaque langue étudiée garde ses propres progrès.',
       'set.lang': 'Langue des explications', 'set.langHelp': 'Le sens au dos de chaque carte, ainsi que les menus et les messages de l’application, sont dans cette langue.',
       'msg.studyError': 'Impossible de charger cette langue. Vérifiez votre connexion et réessayez.',
+      'msg.studyFallback': 'Impossible de charger les mots en {language} : l’anglais est affiché pour l’instant. Vos progrès en {language} sont conservés ; rechargez la page une fois en ligne.',
       'set.theme': 'Apparence', 'set.system': 'Système', 'set.light': 'Clair', 'set.dark': 'Sombre',
       'set.systemNow': 'Système (actuellement {scheme})', 'set.lightLc': 'clair', 'set.darkLc': 'sombre',
       'set.srs': 'Répétition espacée', 'set.newPerDay': 'Nouveaux mots par jour', 'set.maxReviews': 'Révisions maximum par jour',
@@ -202,6 +204,7 @@ export const LANGS = {
       'set.title': 'Ajustes', 'set.study': 'Idioma de estudio', 'set.studyHelp': 'El idioma que estás aprendiendo. La palabra del anverso de cada tarjeta está en este idioma. Cada idioma de estudio guarda su propio progreso.',
       'set.lang': 'Idioma de las explicaciones', 'set.langHelp': 'El significado del reverso de cada tarjeta, y los menús y mensajes de la aplicación, están en este idioma.',
       'msg.studyError': 'No se pudo cargar ese idioma. Comprueba la conexión e inténtalo de nuevo.',
+      'msg.studyFallback': 'No se pudieron cargar las palabras en {language}, así que por ahora se muestra el inglés. Tu progreso en {language} sigue guardado: recarga la página cuando tengas conexión.',
       'set.theme': 'Apariencia', 'set.system': 'Sistema', 'set.light': 'Claro', 'set.dark': 'Oscuro',
       'set.systemNow': 'Sistema (ahora {scheme})', 'set.lightLc': 'claro', 'set.darkLc': 'oscuro',
       'set.srs': 'Repetición espaciada', 'set.newPerDay': 'Palabras nuevas al día', 'set.maxReviews': 'Máximo de repasos al día',
@@ -270,6 +273,7 @@ export const LANGS = {
       'set.title': 'Einstellungen', 'set.study': 'Lernsprache', 'set.studyHelp': 'Die Sprache, die du lernst. Das Wort auf der Vorderseite jeder Karte ist in dieser Sprache. Jede Lernsprache hat ihren eigenen Fortschritt.',
       'set.lang': 'Erklärungssprache', 'set.langHelp': 'Die Bedeutung auf der Rückseite jeder Karte sowie die Menüs und Meldungen der App sind in dieser Sprache.',
       'msg.studyError': 'Diese Sprache konnte nicht geladen werden. Prüfe deine Verbindung und versuche es noch einmal.',
+      'msg.studyFallback': 'Die Wörter für {language} konnten nicht geladen werden, daher siehst du vorerst Englisch. Dein Fortschritt in {language} bleibt gespeichert – lade die Seite neu, sobald du online bist.',
       'set.theme': 'Darstellung', 'set.system': 'System', 'set.light': 'Hell', 'set.dark': 'Dunkel',
       'set.systemNow': 'System (gerade {scheme})', 'set.lightLc': 'hell', 'set.darkLc': 'dunkel',
       'set.srs': 'Verteiltes Wiederholen', 'set.newPerDay': 'Neue Wörter pro Tag', 'set.maxReviews': 'Höchstens Wiederholungen pro Tag',
@@ -338,6 +342,7 @@ export const LANGS = {
       'set.title': '設定', 'set.study': '学習言語', 'set.studyHelp': '学習している言語です。カードの表の単語はこの言語で表示されます。学習言語ごとに進み具合が保存されます。',
       'set.lang': '説明の言語', 'set.langHelp': 'カードの裏の意味と、アプリのメニューやメッセージはこの言語で表示されます。',
       'msg.studyError': 'その言語を読み込めませんでした。接続を確認して、もう一度お試しください。',
+      'msg.studyFallback': '{language}の単語を読み込めなかったため、いまは英語を表示しています。{language}の進み具合は保存されたままです。オンラインになったら再読み込みしてください。',
       'set.theme': '表示', 'set.system': 'システム', 'set.light': 'ライト', 'set.dark': 'ダーク',
       'set.systemNow': 'システム（現在は{scheme}）', 'set.lightLc': 'ライト', 'set.darkLc': 'ダーク',
       'set.srs': '間隔反復', 'set.newPerDay': '1日の新しい単語数', 'set.maxReviews': '1日の復習の上限',
@@ -378,7 +383,7 @@ export function setLang(code) {
 
 export function t(key, vars) {
   let s = LANGS[current].ui[key] ?? LANGS.en.ui[key] ?? key;
-  if (vars) for (const [k, v] of Object.entries(vars)) s = s.replace(`{${k}}`, v);
+  if (vars) for (const [k, v] of Object.entries(vars)) s = s.replaceAll(`{${k}}`, v);
   return s;
 }
 
