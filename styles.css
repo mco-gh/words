@@ -1,20 +1,20 @@
 /* ───────── Tokens ───────── */
 :root {
   /* Raw values per scheme */
-  --bg-l: #f6f4ef;        --bg-d: #0f0e17;
-  --surface-l: #ffffff;   --surface-d: #1b1a28;
-  --sunken-l: #ece9e1;    --sunken-d: #262537;
-  --text-l: #1b1a22;      --text-d: #f1eff8;
-  --muted-l: #63606f;     --muted-d: #a7a4ba;
-  --border-l: #dfdbd1;    --border-d: #343249;
-  --accent-l: #5746d6;    --accent-d: #a596ff;
-  --on-accent-l: #ffffff; --on-accent-d: #15122e;
-  --glow-a-l: #d9d2ff;    --glow-a-d: #2a2360;
-  --glow-b-l: #ffe1cf;    --glow-b-d: #3a1f33;
-  --shadow-l: 30 25 60;   --shadow-d: 0 0 0;
-  /* The flashcard: a solid accent card with white type */
-  --card-l: #5746d6;      --card-d: #4636b8;
-  --card-muted-l: #ddd8ff; --card-muted-d: #d7d1ff;
+  --bg-l: #f4f6f4;        --bg-d: #0b1214;
+  --surface-l: #ffffff;   --surface-d: #152022;
+  --sunken-l: #e6ecea;    --sunken-d: #1f2c2f;
+  --text-l: #132226;      --text-d: #eef6f7;
+  --muted-l: #5a6b6e;     --muted-d: #9fb3b6;
+  --border-l: #d6e0de;    --border-d: #2c3d40;
+  --accent-l: #0e7490;    --accent-d: #5fd0e0;
+  --on-accent-l: #ffffff; --on-accent-d: #052a31;
+  --glow-a-l: #cfeef2;    --glow-a-d: #0b3a44;
+  --glow-b-l: #ffe7cf;    --glow-b-d: #3a2a17;
+  --shadow-l: 10 50 60;   --shadow-d: 0 0 0;
+  /* The flashcard: a solid teal card with white type (the "Ocean" scheme) */
+  --card-l: #0e7490;      --card-d: #0f5f73;
+  --card-muted-l: #cdeef4; --card-muted-d: #c4e8ef;
 
   /* Light defaults (also the fallback where light-dark() is unsupported) */
   --bg: var(--bg-l); --surface: var(--surface-l); --sunken: var(--sunken-l);
