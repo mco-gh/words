@@ -12,18 +12,23 @@
   --glow-a-l: #d9d2ff;    --glow-a-d: #2a2360;
   --glow-b-l: #ffe1cf;    --glow-b-d: #3a1f33;
   --shadow-l: 30 25 60;   --shadow-d: 0 0 0;
+  /* The flashcard: a solid accent card with white type */
+  --card-l: #5746d6;      --card-d: #4636b8;
+  --card-muted-l: #ddd8ff; --card-muted-d: #d7d1ff;
 
   /* Light defaults (also the fallback where light-dark() is unsupported) */
   --bg: var(--bg-l); --surface: var(--surface-l); --sunken: var(--sunken-l);
   --text: var(--text-l); --muted: var(--muted-l); --border: var(--border-l);
   --accent: var(--accent-l); --on-accent: var(--on-accent-l);
   --glow-a: var(--glow-a-l); --glow-b: var(--glow-b-l); --shadow: var(--shadow-l);
+  --card: var(--card-l); --card-muted: var(--card-muted-l);
 
   @media (prefers-color-scheme: dark) {
     --bg: var(--bg-d); --surface: var(--surface-d); --sunken: var(--sunken-d);
     --text: var(--text-d); --muted: var(--muted-d); --border: var(--border-d);
     --accent: var(--accent-d); --on-accent: var(--on-accent-d);
     --glow-a: var(--glow-a-d); --glow-b: var(--glow-b-d); --shadow: var(--shadow-d);
+    --card: var(--card-d); --card-muted: var(--card-muted-d);
   }
 
   @supports (color: light-dark(white, black)) {
@@ -37,6 +42,8 @@
     --on-accent: light-dark(var(--on-accent-l), var(--on-accent-d));
     --glow-a: light-dark(var(--glow-a-l), var(--glow-a-d));
     --glow-b: light-dark(var(--glow-b-l), var(--glow-b-d));
+    --card: light-dark(var(--card-l), var(--card-d));
+    --card-muted: light-dark(var(--card-muted-l), var(--card-muted-d));
   }
 
   /* Status / rating hues (used as tints over the surface, so they work in both schemes) */
@@ -258,21 +265,25 @@ main {
   display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.6rem;
   padding: clamp(1.5rem, 6cqi, 3rem) clamp(1.1rem, 5cqi, 2.5rem);
   text-align: center;
-  border: 1px solid var(--border); border-radius: var(--radius-lg);
-  background: var(--surface);
-  box-shadow: 0 1px 2px rgb(var(--shadow) / 0.06), 0 18px 40px -18px rgb(var(--shadow) / 0.28);
+  border: 1px solid var(--card); border-radius: var(--radius-lg);
+  background: var(--card);
+  color: #fff;
+  --muted: var(--card-muted);   /* muted text inside the card */
+  box-shadow: 0 1px 2px rgb(var(--shadow) / 0.08), 0 20px 44px -18px color-mix(in srgb, var(--card) 70%, transparent);
   -webkit-backface-visibility: hidden; backface-visibility: hidden;
 }
 .back {
   rotate: y 180deg;
-  background: linear-gradient(160deg, color-mix(in srgb, var(--accent) 9%, var(--surface)), var(--surface) 55%);
+  /* A touch deeper than the front, so the flip reads as turning the card over. */
+  background: linear-gradient(160deg, var(--card), color-mix(in srgb, var(--card) 82%, black));
 }
+.face :focus-visible { outline-color: #fff; }
 
 .badge {
   position: absolute; inset-block-start: 1rem; inset-inline-start: 1rem;
   padding: 0.15rem 0.6rem; border-radius: 999px;
   font-size: 0.72rem; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase;
-  color: var(--on-accent); background: var(--accent);
+  color: var(--card); background: #fff;
 }
 
 .word {
@@ -297,8 +308,11 @@ main {
   font-size: 0.78rem; font-weight: 600; font-style: italic;
   background: var(--sunken);
 }
+.face .pos { background: rgb(255 255 255 / 0.16); color: #fff; }
 
-.speak { position: absolute; inset-block-start: 0.75rem; inset-inline-end: 0.75rem; color: var(--accent); }
+.speak { position: absolute; inset-block-start: 0.75rem; inset-inline-end: 0.75rem; color: #fff; }
+.face .icon-btn { background: rgb(255 255 255 / 0.12); border-color: rgb(255 255 255 / 0.28); }
+.face .icon-btn:hover { background: rgb(255 255 255 / 0.22); }
 .hint { position: absolute; inset-block-end: 1rem; inset-inline: 1rem; font-size: 0.8rem; color: var(--muted); }
 
 .definition {
@@ -319,6 +333,8 @@ main {
   box-shadow: 0 10px 24px -12px var(--accent);
   transition: scale 0.15s, filter 0.15s;
 }
+/* Under the card, "Show answer" is ink rather than accent, so it stays distinct from the card. */
+.actions .primary-btn { background: var(--text); color: var(--bg); box-shadow: 0 10px 24px -12px rgb(var(--shadow) / 0.5); }
 .primary-btn:hover { filter: brightness(1.08); }
 .primary-btn:active { scale: 0.98; }
 
